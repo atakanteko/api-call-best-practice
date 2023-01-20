@@ -1,58 +1,29 @@
-import './App.css';
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
+import useApi from "./hooks/useApi";
 
-function App() {
-  const [posts, setPosts] = useState(null);
-  const [postsError, setPostsError] = useState("");
-  const [postsLoading, setPostsLoading] = useState(false);
+const getPosts = () => axios.get("https://jsonplaceholder.typicode.com/posts");
+const getComments = () =>
+  axios.get("https://jsonplaceholder.typicode.com/comments");
 
-  const [comments, setComments] = useState(null);
-  const [commentsError, setCommmentsError] = useState("");
-  const [commentsLoading, setCommentsLoading] = useState(false);
+export default function App() {
+  const getPostsApi = useApi(getPosts);
+  const getCommentsApi = useApi(getComments);
 
   useEffect(() => {
-    handlePosts();
-    handleComments();
+    getPostsApi.request();
+    getCommentsApi.request();
   }, []);
-
-  const handlePosts = async () => {
-    setPostsLoading(true);
-    try {
-      const result = await axios.get(
-        "https://jsonplaceholder.typicode.com/posts"
-      );
-      setPosts(result.data);
-    } catch (err) {
-      setPostsError(err.message || "Unexpected Error!");
-    } finally {
-      setPostsLoading(false);
-    }
-  };
-
-  const handleComments = async () => {
-    setCommentsLoading(true);
-    try {
-      const result = await axios.get(
-        "https://jsonplaceholder.typicode.com/comments"
-      );
-      setComments(result.data);
-    } catch (err) {
-      setCommmentsError(err.message || "Unexpected Error!");
-    } finally {
-      setCommentsLoading(false);
-    }
-  };
 
   return (
     <div className="App">
       {/* Post List */}
       <div>
         <h1>Posts</h1>
-        {postsLoading && <p>Posts are loading!</p>}
-        {postsError && <p>{postsError}</p>}
+        {getPostsApi.loading && <p>Posts are loading!</p>}
+        {getPostsApi.error && <p>{getPostsApi.error}</p>}
         <ul>
-          {posts?.map((post) => (
+          {getPostsApi.data?.map((post) => (
             <li key={post.id}>{post.title}</li>
           ))}
         </ul>
@@ -60,10 +31,10 @@ function App() {
       {/* Comment List */}
       <div>
         <h1>Comments</h1>
-        {commentsLoading && <p>Comments are loading!</p>}
-        {commentsError && <p>{commentsError}</p>}
+        {getCommentsApi.loading && <p>Comments are loading!</p>}
+        {getCommentsApi.error && <p>{getCommentsApi.error}</p>}
         <ul>
-          {comments?.map((comment) => (
+          {getCommentsApi.data?.map((comment) => (
             <li key={comment.id}>{comment.name}</li>
           ))}
         </ul>
@@ -71,5 +42,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
