@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import axios from "axios";
 import useApi from "./hooks/useApi";
+import apiClient from "./helper/apiClient"
 
-const getPosts = () => axios.get("https://jsonplaceholder.typicode.com/posts");
-const getComments = () =>
-  axios.get("https://jsonplaceholder.typicode.com/comments");
+const getPosts = () => apiClient.get("/posts");
+const getComments = () =>apiClient.get("/posts");
 
 export default function App() {
   const getPostsApi = useApi(getPosts);
