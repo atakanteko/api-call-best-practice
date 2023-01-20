@@ -1,23 +1,42 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 function App() {
+  const [posts, setPosts] = useState(null);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    handlePosts();
+  }, []);
+
+  const handlePosts = async () => {
+    setLoading(true);
+    try {
+      const result = await axios.get(
+        "https://jsonplaceholder.typicode.com/posts"
+      );
+      setPosts(result.data);
+    } catch (err) {
+      setError(err.message || "Unexpected Error!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div>
+        <h1>Posts</h1>
+        {loading && <p>Posts are loading!</p>}
+        {error && <p>{error}</p>}
+        <ul>
+          {posts?.map((post) => (
+            <li key={post.id}>{post.title}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
