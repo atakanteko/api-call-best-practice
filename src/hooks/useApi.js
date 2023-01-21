@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import { useState } from "react";
 
 export default (apiFunc) => {
@@ -21,6 +22,6 @@ export default (apiFunc) => {
     data,
     error,
     loading,
-    request
+    request,
   };
 };

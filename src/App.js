@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
 import axios from "axios";
 import useApi from "./hooks/useApi";
-import apiClient from "./helper/apiClient"
+import apiClient from "./helper/apiClient";
 
-const getPosts = () => apiClient.get("/posts");
-const getComments = () =>apiClient.get("/posts");
+const getPosts = () => apiClient()["get"]("/posts");
+const getComments = () => apiClient().get("/comments");
 
+// axios.get("/posts") ile ayni sey
+// server()[method](url, { params });
 export default function App() {
   const getPostsApi = useApi(getPosts);
   const getCommentsApi = useApi(getComments);
